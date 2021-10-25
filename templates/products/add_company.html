@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block car_brand %}active{% endblock %}
+{% block add_car_brand %}active{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <ol class="breadcrumb">
+            <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Add Company</li>
+        </ol>
+    </section>
+    <br>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-6 pull-left">
+                <div class="box">
+                    <div class="box-header">
+                        <h4 class="text-center"><b>Add Company</b></h4>
+                    </div>
+                    <div class="box-body">
+                        <form action="{% url 'product:add_company' %}" method="post" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Company Name <span style="color:red">*</span></label>
+                                    <input type="text" name="name" class="form-control form-control-alternative" placeholder=" eg: TOYOTA, HONDA, BMW" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Date <span style="color:red">*</span></label>
+                                    <input type="date" name="date" class="form-control form-control-alternative" placeholder="Date" onfocus="(this.type='date')" onblur="(this.type='text')" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 pull-right form-group">
+                                    <label class="form-control-label"></label>
+                                    <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block bank %}active{% endblock %}
+{% block add_bank %}active{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <ol class="breadcrumb">
+            <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Japan Add Bank</li>
+        </ol>
+    </section>
+    <br>
+    <section class="content">
+        <!-- Info boxes -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box">
+                    <div class="box-header">
+                        <h4 class="text-center"><b>Add User</b></h4>
+                    </div>
+                    <div class="box-body">
+                        <form class="" method="post" action="{% url 'common:register' %}">
+            <div class="login-wrap">
+                {% if form.errors or form.non_field_errors %}
+                    <div class="error-alert">
+                        <i class="fa fa-warning pull-center"></i>
+                    </div>
+                {% endif %}
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div>
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                <h5>Register a New User</h5>
+                <label class="btn btn-primary" for="image_1">
+                <input type="file" id="image_1" name="image_1" class=" col-lg-3 pull-left" style="display:none" title="Image 1"  onchange="$('#upload-file-info').html(this.files[0].name)">
+                Upload Profile Pic
+                <span class='label label-info' id="upload-file-info"></span>
+            </label><br><br>
+
+                <input type="text" class="form-control" placeholder="Username" name="username" value="{{ username }}" autofocus>
+                {% if form.errors %}
+                    {{ form.errors.username }}
+                {% endif %}
+                <br>
+                <input type="text" class="form-control user_type" name="user_type" placeholder="User Designation" list="unit-list">
+                <datalist id="unit-list">
+                    <option value="Director"></option>
+                    <option value="DHO"></option>
+                    <option value="Store Keeper"></option>
+                </datalist> <br>
+                <input type="text" class="form-control" placeholder="Address" name="address" autofocus><br>
+                <input type="text" class="form-control" placeholder="Office Address" name="office_address" autofocus><br>
+                <input type="text" class="form-control" placeholder="City" name="city" autofocus><br>
+                <input type="text" class="form-control" placeholder="Phone / Mobile" name="phone_no" autofocus><br>
+                <input type="password" class="form-control" name="password1" placeholder="Password" value="{{ password1 }}">
+                {% if form.errors %}
+                    {{ form.errors.password1  }}
+                {% endif %}
+                <br>
+                <input type="password" class="form-control" name="password2" placeholder="Confirm Password" value="{{ password2 }}">
+                {% if form.errors %}
+                    {{ form.errors.password2  }}
+                {% endif %}
+                <br>
+                <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-lock"></i> Register</button>
+            </div>
+        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

@@ -1,0 +1,418 @@
+{% extends 'base.html' %}
+{% block sales %}active{% endblock %}
+{% block sales_add %}active{% endblock %}
+{% load static %}
+{% block content %}
+    <style>
+        .item-row th {
+            background: #eee;
+        }
+
+        .delete-btn {
+            position: relative;
+        }
+
+        .delete {
+            display: block;
+            color: #000;
+            text-decoration: none;
+            position: absolute;
+            background: #EEEEEE;
+            font-weight: bold;
+            padding: 0px 3px;
+            border: 1px solid;
+            top: -6px;
+            left: -6px;
+            font-family: Verdana;
+            font-size: 12px;
+        }
+
+        table {
+          table-layout: fixed ;
+          width: 100% ;
+        }
+        td {
+          width: 25% ;
+        }
+table {
+    table-layout: auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+table td {
+    border: 1px solid #ccc;
+}
+table .absorbing-column {
+    width: 100%;
+}
+    </style>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">BMSD Create Invoice</li>
+            </ol>
+        </section>
+        <br>
+        <section class="content">
+            <div class="row" style="font-size: large">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h2 class="text-center">BMSD Create Invoice</h2>
+                        </div>
+                        <hr>
+                        <div class="box-body">
+                            <div class="row" style="font-size: large">
+                                <div class="col-xs-12 col-md-12">
+                                    <div class="row">
+                                        <div class="col-xs-6 col-md-6">
+                                            <strong>Bill No:</strong>
+                                            <div class="row">
+                                                <div class="col-xs-4 col-md-4" style="width: 75%;">
+                                                    <input class="form-control bill_no" placeholder="Bill No.">
+                                                </div>
+                                            </div>
+                                            
+                                            <strong>Hospital Name:</strong>
+                                            <div class="row">
+                                                <div class="col-xs-4 col-md-4" style="width: 75%;">
+                                                    <input class="form-control hospital_name" name="hospital_name" id="hopital_name" placeholder="Hospital Name">
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <br>
+                                            <div id="form-control  item-data-sc" class="table-responsive item-data-sc" style="height: 500px; width:130%; overflow-x:auto; border: 1px solid #eee">
+                                                <table class="table table-bordered w-auto" >
+
+                                                    <thead>
+                                                    <tr class="item-row">
+                                                        <th style="width:25%; padding-right: 150px;">Products</th>
+                                                        <th>Expiry</th>
+                                                        <th>Price</th>
+                                                        <th>Quantity</th>
+                                                        <th style="padding-right: 75px;">Total</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br>
+                                            <div class="col-md-4 col-lg-2" style="width: 75%;">
+                                                <a id="addRow" href="javascript:;" title="Add Item" class="form-control btn btn-primary">Add Item</a> <span class="item-error" style="color: red; display: none">please add Item</span>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="col-xs-6 col-md-6" >
+                                            <div class="row">
+                                                <div class="form-group" style="margin: -26px">
+                                                    <div class="col-xs-6 col-md-6">
+                                                        <strong>Date:</strong>
+                                                        <input class="form-control dated" type="date" value="{{today_date|date:'Y-m-d'}}">
+                                                        <strong>District:</strong>
+                                                        <input class="form-control district" type="text" name="district" id="district" placeholder="District ">
+                                                    </div>
+                                                    
+                                                    <div class="col-xs-6 col-md-6">
+                                                        <span style="color: green"><label>User :{{request.user.id}} </label></span>
+                                                        <span style="color: blue"><b>{{request.user.username|title}} | {{request.user.user_profile.user_type|title}}</b></span>
+                                                        <input type="hidden" class="form-control user_id" name="user_id" id="user_id" value="{{request.user.id}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            <!-- <div class="existing-customer" style=" overflow: auto; width: 70%; margin-right: 0px; margin-left: auto;">
+                                                <h4><strong>Billed To: BMSD</strong></h4> -->
+                                                <!-- <span class="customererror" style="color: red; display: none">Customer Doesn't exist please add Customer</span>
+                                                <input class="form-control customer" id="customer-id" value="" list="customer-list" >
+                                                <br> -->
+<!--                                                <a class="new-customer" style="cursor: pointer;">New Customer</a><br>-->
+                                                <br>
+    <!--                                             </div>
+ -->                                            
+                                                <!-- <div id="new-customer-form" class="new-customer-form" style="display: none">
+                                                <span class="already-error" style="color: red; display: none">This Customer Already exist</span>
+                                                <input type="text" class="form-control customer_name" name="customer_name" placeholder="Customer Name"><br>
+                                                <input type="text" class="form-control customer_cnic" name="customer_cnic" placeholder="Customer CNIC"><br>
+                                                <input type="number" class="form-control customer_phone" name="customer_phone" placeholder="Customer Phone"><br>
+                                                <a class="added-customer" style="cursor: pointer;">Existing Customer</a><br><br>
+                                            </div> -->
+
+                                            <div class="table-responsive " style="width: 72%; margin-right: 0px; margin-left: auto;  border: 1px solid #eee">
+                                                <table class="table table-bordered w-auto">
+                                                    <thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="text-right"><strong>Sub Total</strong></td>
+                                                        <td><span id="subtotal">0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="text-right"><strong>Discount</strong></td>
+                                                        <td style="padding-right: 2px;"><input class="form-control" id="discount" value="0" type="text"></td>
+                                                    </tr>
+                                                    <tr hidden>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="text-right"><strong>Shipping</strong></td>
+                                                        <td><input class="form-control" id="shipping" value="0" type="text"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Total Qty: </strong><span id="totalQty" style="color: red; font-weight: bold">0</span></td>
+                                                        <td></td>
+                                                        <td class="text-right"><strong>Grand Total</strong></td>
+                                                        <td><span id="grandTotal" style="color:red">0</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4" class="text-center"><h4><strong>Customer Ledger</strong></h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" class="text-right">Received Amount</td>
+                                                        <td style="padding-right: 2px;"><input class="form-control" id="paidAmount" value="0" type="text"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" class="text-right">Remaining Amount</td>
+                                                        <td style="padding-right: 2px;"><span id="remainingAmount">0</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="4" class="text-center"><h4><strong>Cash Calculator</strong></h4></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-right" colspan="3">Cash Payment</td>
+                                                        <td style="padding-right: 2px;"><input class="form-control" id="cash_payment" value="0" type="text"></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="text-right" colspan="3">Returned Cash</td>
+                                                        <td><span id="returned_cash">0</span></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br>
+                                            <div class="col-md-12" style="width:100%; padding-left: 28%;">
+                                                <a id="create-invoice" href="javascript:;" title="Create Invoice" class="form-control btn btn-primary">Create Invoice</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+
+    <script src="{% static 'dist/js/jquery.invoice.js' %}"></script>
+    <script>
+        jQuery(document).ready(function(){
+            jQuery().invoice({
+                addRow : "#addRow",
+                delete : ".delete",
+                parentClass : ".item-row",
+
+                price : ".price",
+                qty : ".qty",
+                total : ".total",
+                totalQty: "#totalQty",
+
+                subtotal : "#subtotal",
+                discount: "#discount",
+                shipping : "#shipping",
+                grandTotal : "#grandTotal",
+
+                remainingAmount: '#remainingAmount',
+                paidAmount: '#paidAmount',
+
+                cashPayment: '#cash_payment',
+                returnedCash: '#returned_cash'
+            });
+
+        });
+        $(function () {
+            $('body').on('focusout', '.invoice-item', function(){
+
+                var item_price = $(this).parent().parent().find("option[value='" + $(this).val() + "']").data('price');
+                $(this).parent().parent().parent().find('.price').val(item_price);
+
+                var stock = $(this).parent().parent().find("option[value='" + $(this).val() + "']").data('stock')
+                $(this).parent().parent().parent().find('.stock').html(stock);
+
+                var stock_expiry = $(this).parent().parent().find("option[value='" + $(this).val() + "']").data('stock_expiry');
+                $(this).parent().parent().parent().find('.stock_expiry').val(stock_expiry);
+            });
+            $('body').on('click', '#create-invoice', function () {
+
+                if ($('#item-name').hasClass('item-name') == false ) {
+                    $('.item-error').show();
+                    return;
+                }
+                var error = false;
+                if ($('.customer').is(":visible") == true)
+                {
+                    // if ($('.customer').val() =="")
+                    // {
+                    //     $('.customer').css('border-color', 'red');
+                    //     error = true;
+                    // } else {
+                    //     $('.customer').css('border', 'none');
+                    // }
+                    var existing_customers_id = [];
+                    {% for customer in customers %}
+                        existing_customers_id.push({{ customer.id }});
+                    {% endfor %}
+
+                    var cus_val = $('.customer').val();
+                    var cus_id = $('#customer-list [value="' + cus_val + '"]').data('id');
+                    // if(jQuery.inArray( cus_id, existing_customers_id ) == -1) {
+                    //     $('.customer-error').show();
+                    //     $('.customer').css('border-color', 'red');
+                    //     return;
+                    // } else {
+                    //     $('.customer-error').hide();
+                    // }
+                }
+                if ($('.customer_name').is(":visible") == true) {
+                    if ($('.customer_name').val() == "") {
+                        $('.customer_name').css('border-color', 'red');
+                        error = true;
+                    }
+                    else {
+                        $('.customer_name').css('border', 'none');
+                    }
+                    if ($('.customer_cnic').val() == "") {
+                        $('.customer_cnic').css('border-color', 'red');
+                        error = true;
+                    }
+                    else {
+                        $('.customer_cnic').css('border', 'none');
+                    }
+                    if ($('.customer_phone').val() == "") {
+                        $('.customer_phone').css('border-color', 'red');
+                    }
+                    else {
+                        $('.customer_phone').css('border', 'none');
+                    }
+                    {% for customer in customers %}
+                        if ($('.customer_name').val() == '{{ customer.name }}' && $('.customer_cnic').val()== '{{ customer.cnic }}') {
+                            $('.already-error').show();
+                            return;
+                        }
+                    {% endfor %}
+                }
+                if       ($('.invoice-item').val() == ""){
+                    $(".item-error").show();
+                    error=true;
+                    $('.invoice-item').css('border-color', 'red');
+                }
+                else {
+                    $('.invoice-item').css('border' ,'none');
+
+                }
+                if ($('.price').val()=="") {
+
+                    $('.item-error').show();
+                    $('.price').css('border-color', 'red');
+                    error=true;
+                }
+                else {
+                    $('.item-error').hide();
+                    $('.price').css('border', 'none');
+                }
+                if (error == true){
+                    return;
+                }
+                var user_id = $('.user_id').val();
+                console.log("______________________cm______________")
+                console.log("______________________cm______________")
+                console.log(user_id)
+                console.log("________________-ur______________")
+                console.log("________________-ur______________")
+                console.log("________________-ur______________")
+                var hospital_name = $('.hospital_name').val();
+                console.log(hospital_name)
+                var district = $('.district').val();
+                var items = [];
+                var total_quantity = 0;
+                for (var i=1; i<$('.item-row').length; i+=1) {
+                    var products = {};
+                    products['item_name'] = $('.item-row').eq(i).find('#invoice-item').val();
+
+                    var ll = $('.item-row').eq(i).find('#invoice-item').val();
+                    products['item_id'] = $('.item-row').eq(i).find('#all-items [value="' + ll + '"]').data('id');
+
+                    products['price'] = $('.item-row').eq(i).find('.price').val();
+                    products['qty'] = $('.item-row').eq(i).find('.qty').val();
+                    products['perdiscount'] = $('.item-row').eq(i).find('.perdiscount').val();
+                    products['total'] = $('.item-row').eq(i).find('.total').text();
+                    if ($('.item-row').eq(i).find('#invoice-item').val() != "") {
+                        items.push(products);
+                        total_quantity += Number(products['qty']);
+                    }
+                }
+                var sub_total = $('#subtotal').text();
+                var discount = $('#discount').val();
+                var shipping = $('#shipping').val();
+                var grand_total = $('#grandTotal').text();
+                var remaining_amount = $('#remainingAmount').text();
+                var paid_amount = $('#paidAmount').val();
+                var cash_payment = $('#cash_payment').val();
+                var returned_cash = $('#returned_cash').text();
+                var totalQty = total_quantity;
+                $.post("{% url 'invoice:generate_invoice' %}", {
+                        hospital_name: hospital_name,
+                        district: district,
+                        user_id: user_id,
+                        sub_total: sub_total,
+                        discount: discount,
+                        shipping: shipping,
+                        grand_total: grand_total,
+                        totalQty: totalQty,
+                        remaining_amount: remaining_amount,
+                        paid_amount: paid_amount,
+                        cash_payment: cash_payment,
+                        returned_cash: returned_cash,
+                        dated: $('.dated').val(),
+                        bill_no: $('.bill_no').val(),
+                        items: JSON.stringify(items)
+                    }, function (result, status) {
+                        {#window.location.href = '/invoice/detail/'+ result.invoice_id ;#}
+                        window.location.href = '/invoice/list/invoice/';
+                    }
+                ).fail(function (xhr, status, errors) {
+                    console.log(errors)
+                    console.log(user_id)
+                    alert('Something is wrong! please check all fields and try again');
+
+                });
+            });
+
+            $('.new-customer').on('click', function () {
+                $('.existing-customer').hide();
+                $('.new-customer-form').show();
+                $('.customer').val('');
+            });
+
+            $('.added-customer').on('click', function () {
+                $('.existing-customer').show();
+                $('.new-customer-form').hide();
+                $('.customer_name').val('');
+                $('.customer_phone').val('');
+            });
+        });
+        $('.btn-primary').on('click', function () {
+            $('.item-error').hide();
+        });
+
+    </script>
+
+
+{% endblock %}

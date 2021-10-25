@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% block sales %}active{% endblock %}
+{% block sales_list %}active{% endblock %}
+{% load static %}
+{% block content %}
+<style>
+    img {
+    max-width: 15%;
+    height: auto;
+}
+</style>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <a href="{% url 'invoice:add_invoice' %}"><button type="button" id="invoice" class="btn btn-primary"  id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Create Invoice</button></a>
+            <button type="button" class="btn btn-primary print-invoice-btn" onclick="PrintInvoice('print-invoice')" >Save Invoice</button>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li><a href="{% url 'invoice:invoice_list' %}">Invoice List</a></li>
+                <li class="active">Invoice View</li>
+            </ol>
+        </section>
+        <section class="content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-body">
+                            <div class="row print-invoice" id="print-invoice">
+                                <div class="col-lg-12 text-center">
+                                    <h1 ><strong>LMIS</strong></h1>
+                                    <img id="yourImgId" src="{% static "dist/img/icons/logo11.jpeg" %}" alt="logo" %}">
+                                    <h1>LMIS | BMSD</h1>
+                                    <hr>
+                                    <u><h2>Invoice</h2></u>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="content-panel" style="padding: 5px">
+                                        <div class="row">
+                                            <div class="col-lg-6 pull-left">
+                                                {% if invoice.dho %}
+                                                    <div class="col-lg-12">
+                                                        <label><strong class="f-size">Customer Name:</strong></label> <span class="f-size">{{ invoice.dho.usernamename|title }} | {{invoice.dho.user_profile.user_type|title}}</span>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <label><strong class="f-size">Mobile No:</strong></label> <span class="f-size">{{ invoice.dho.user_profile.phone_no }}</span>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <label><strong class="f-size"> District / City:</strong></label> <span class="f-size">{{ invoice.district|title }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-lg-6 text-right">
+                                                <div class="col-lg-12">
+                                                    <label><strong class="f-size">Billed Date:</strong></label><span class="f-size">{{ invoice.date|date:"d-m-yy" }}</span>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <label><strong class="f-size">Receipt No:</strong></label> <span class="f-size">{{ invoice.id|stringformat:"07d"|title }}</span>
+                                                </div>
+                                                {% if invoice.bill_no %}
+                                                    <div class="col-lg-12">
+                                                        <label><strong class="f-size">Bill No:</strong></label> <span class="f-size">{{ invoice.bill_no }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="col-lg-12">
+                                                        <label><strong class="f-size">Hospital Name:</strong></label> <span class="f-size">{{ invoice.hospital_name|title }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr class="item-row">
+                                                            <th >Product Name</th>
+                                                            <th >Company</th>
+                                                            <th>Quantity</th>
+                                                            <th>Price</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for item in  invoice.invoice_stockout.all %}
+                                                            <tr id="hiderow">
+                                                                <td>
+                                                                    {{ item.product.product_name|title }}
+                                                                </td>
+                                                                <td>{{ item.product.company_name.name|title}}</td>
+                                                                <td> {{item.stock_out_quantity}} </td>
+                                                                <td>
+                                                                    {{ item.selling_price|floatformat:-2 }}
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        <tr><td colspan="4" style="color:white"></td></tr>
+
+                                                        <tr>
+                                                            <td></td><td></td><td></td><td></td>
+                                                            <td class="text-right" ><strong >Sub Total</strong></td>
+                                                            <td><span id="grandTotal" style="color: red;">{{ invoice.sub_total|floatformat:-2 }}</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Received Payment: {{ invoice.paid_amount|floatformat:-2 }}</td>
+                                                            <td></td><td></td><td></td>
+                                                            <td class="text-right"><strong >Discount</strong></td>
+                                                            <td><span id="cash_payment" >{{ invoice.discount|floatformat:-2 }}</span></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Remaining Paymnet (Ledger Amount): <span style="color: red">{%  if invoice.remaining_payment %}{{ invoice.remaining_payment|floatformat:-2 }}{% else %}0{% endif %}</span></td>
+                                                            <td></td><td></td><td></td>
+                                                            <td class="text-right"><strong >Grand Total</strong></td>
+                                                            <td><span id="returned_cash"  >{{invoice.grand_total|floatformat:-2 }}</span></td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-md-12" style="text-align: center;">
+                                                <strong style="font-size:12px;color:#000">Thank You</strong>
+                                            </div>
+                                            <div class="col-xs-12 col-md-12" style="text-align: center;">
+                                                <strong class="f-size">
+                                                    Software Developed By GIL | Engr ALI</strong>
+                                            </div>
+                                            <div class="col-lg-6 col-xs-12 text-center">
+                                                <span class="f-size">www.GIL.com</span>
+                                            </div>
+                                            <div class="col-lg-6 col-xs-12 text-center">
+                                                <span class="f-size">ph:+923428053402</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script>
+        var yourImg = document.getElementById('yourImgId');
+        if(yourImg && yourImg.style) {
+            yourImg.style.height = 'auto';
+            yourImg.style.width = '15%';
+        }
+    </script>
+    <script>
+        function PrintInvoice(divName){
+             var printContents = document.getElementById(divName).innerHTML;
+             var originalContents = document.body.innerHTML;
+             document.body.innerHTML = printContents;
+             $('table').removeClass('table-bordered');
+             $('tr').css('border', '1px solid #000');
+             $('td').css('border', '1px solid #000');
+             $('th').css('border', '1px solid #000');
+             $('th').css('font-size', '8px');
+             $('tr').css('font-size', '8px');
+             $('td').css('font-size', '8px');
+             $('.f-size').css('font-size', '8px');
+             window.print();
+             document.body.innerHTML = originalContents;
+        }
+    </script>
+<script>
+
+$('#invoice').on('click', function() {
+    var $this = $(this);
+  $this.button('loading');
+    setTimeout(function() {
+       $this.button('reset');
+   }, 5000);
+});
+</script>
+
+{% endblock %}

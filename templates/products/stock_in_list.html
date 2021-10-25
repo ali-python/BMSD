@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block car_brand %}active{% endblock %}
+{% block list_car_brand %}active{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <ol class="breadcrumb">
+            <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{% url 'product:products_items_list' %}">Product List</a></li>
+            <li class="active">Stock Item List</li>
+        </ol>
+    </section>
+    <br>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="box">
+                    <div class="row">
+                        <h2 class="text-center"><b>{{product.product_name}} | <small><b>Stock List</b></small></b></h2>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4 pull-left">
+                                <input type="text" class="form-control car_brand_name" placeholder="Search by Name ..." >
+                            </div>
+                            <div class="col-md-2 pull-right">
+                                <a href="{% url 'product:stock_items_add' id=product.id %}"><button class="form-control btn btn-success">Add Stock</button></a>
+                            </div>
+                            <div class="col-md-2 pull-right">
+                                <button class="form-control btn btn-primary search">Search</button>
+                            </div>
+
+                            <br><br>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table align-items-center table-striped table-bordered table-hover">
+                                <thead class="thead-dark">
+                                <tr>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-center">Buying Price / Item</th>
+                    <th class="text-center">Total Buying Amount</th>
+                    <th class="text-center">Selling Price / Item</th>
+                    <th class="text-center">Total Selling Amount</th>
+                    <th class="text-center">Added Date</th>
+                    <th class="text-center">Expiry Date</th>
+<!--                     <th class="text-center">Actions</th>
+ -->                </tr>
+                </thead>
+                <tbody class="product-table-body text-center">
+                {% for stockin in object_list %}
+                    <tr>
+                        <td>{{ stockin.quantity|floatformat:-2 }} </td>
+                        <td class="#">{{ stockin.buying_price_item|floatformat:-2 }}</td>
+                        <td class="#">{{ stockin.total_buying_amount|floatformat:-2 }}</td>
+                        <td>{{ stockin.price_per_item|floatformat:-2 }}</td>
+                        <td>{{ stockin.total_amount|floatformat:-2 }}</td>
+                        <td>{{ stockin.dated_order }}</td>
+                        <td>{{ stockin.stock_expiry }}</td>
+                       <!--  <td>
+                            <a href="#"><button class="btn btn-primary btn-xs"><i class="fa fa-edit"></i></button></a>
+                        </td> -->
+                    </tr>
+                {% endfor %}
+                </tbody>
+                            </table>
+                            {% if paginator.page_range|length > 1 %}
+                            <div class="text-center col-lg-12">
+                                <ul class="pagination justify-content-center">
+                                <span class="step-links">
+                                    {% if page_obj.has_previous %}
+                                        <a href="?page=1">First</a>
+                                        <a href="?page={{ page_obj.previous_page_number }}" title="Previous"><<</a>
+                                    {% endif %}
+                                    {% if page_obj.has_next %}
+                                        <a href="?page={{ page_obj.next_page_number }}" title="Next">>></a>
+                                        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                                    {% endif %}
+                                </span>
+                                 </ul>
+                            <div>
+                            <span class="current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+                            </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+<style>
+  .pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+
+}
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {background-color: rgb(106, 142, 174);}
+</style>
+{% endblock %}
