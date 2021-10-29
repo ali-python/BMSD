@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{% static 'bower_components/jvectormap/jquery-jvectormap.css' %}">
     <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
     <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="{% static 'js/Chart.js' %}"></script>
 
     <!-- Google Font -->
     <link rel="stylesheet"
@@ -96,7 +98,7 @@
                         <li class="{% block add_customer %}{% endblock %}"><a href="{% url 'accounts:user_list_ledger' %}"><i class="fa fa-circle-o"></i> <span>User List</span></a></li>
                     </ul>
                 </li>
-                 <li class="header">Sales</li>
+                <li class="header">Sales</li>
                 <li class="treeview {% block sales %}{% endblock %}">
                     <a href="#">
                         <i class="fa fa-shopping-cart "></i> <span>Sales</span>
@@ -109,41 +111,16 @@
                         <li class="{% block sales_list %}{% endblock %}"><a href="{% url 'invoice:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoice List</a></li>
                     </ul>
                 </li>
-                <li class="header">Car Parts Sales</li>
-                <li class="treeview {% block car_parts %}{% endblock %}">
-                    <a href="#">
-                        <i class="fa fa-shopping-cart "></i> <span>Car Parts Sales</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="{% block sales_add_car_parts %}{% endblock %}"><a href="#"><i class="fa fa-circle-o"></i> <span>Add Car Parts Invoice</span></a></li>
-                        <li class="{% block sales_list_car_parts %}{% endblock %}"><a href="#"><i class="fa fa-circle-o"></i>Car Parts Invoice List</a></li>
-                    </ul>
-                </li>
-                <li class="header">Logs & Reports</li>
-                <li class="treeview {% block stock_logs %}{% endblock %}">
-                    <a href="#">
-                        <i class="fa fa-history fa-spin fa-fw"></i> <span>Stock Logs</span>
-                        <span class="pull-right-container">
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li class="{% block daily_stock_logs %}{% endblock %}"><a href="#"><i class="fa fa-circle-o"></i> <span>Daily Logs</span></a></li>
-                        <li class="{% block monthly_stock_logs %}{% endblock %}"><a href="#"><i class="fa fa-circle-o"></i>Monthly Logs</a></li>
-                    </ul>
-                </li>
+                <li class="header">Reports</li>
                 <li class="treeview {% block reports %}{% endblock %}">
                     <a href="#">
-                        <i class="fa fa-copy"></i> <span>Reports</span>
+                        <i class="fa fa-shopping-cart "></i> <span>Dialy, Weekly, Monthly</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="{% block monthly_reports %}{% endblock %}"><a href="#"><i class="fa fa-circle-o"></i> <span>Monthly Reports</span></a></li>
+                        <li class="{% block show_reports %}{% endblock %}"><a href="{% url 'common:reports' %}"><i class="fa fa-circle-o"></i> <span>Show Reports</span></a></li>
                     </ul>
                 </li>
                 <li class="header">User</li>
@@ -168,6 +145,8 @@
 </div>
 
 {% block script %}
+
+    <script src="{% static 'js/highcharts.js' %}"></script>
     <script src="{% static 'js/jquery.js' %}"></script>
     <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
     <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>

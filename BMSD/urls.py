@@ -20,6 +20,7 @@ from common.views import IndexView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('common/', include(('common.urls', 'common'), namespace='common')),
+    path('api/', include(('common.api_urls', 'common'), namespace='api')),
     path('ledger/', include(('accounts.urls', 'accounts'), namespace='user_ledger')),
     path('products/', include(('products.urls', 'products'), namespace='product')),
     path('invoice/', include(('invoice.urls', 'invoice'), namespace='invoice')),
