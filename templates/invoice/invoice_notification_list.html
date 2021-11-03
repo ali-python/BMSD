@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
-{% block sales %}active{% endblock %}
-{% block sales_list %}active{% endblock %}
+{% block sales_notification %}active{% endblock %}
+{% block sales_notification_list %}active{% endblock %}
 {% block content %}
 {% load static %}
     <div class="content-wrapper">
     <section class="content-header">
         <ol class="breadcrumb">
             <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i>Home</a></li>
-            <li><a href="{% url 'invoice:add_invoice' %}">Create Invoice</a></li>
-            <li class="active">BMSD Invoice List</li>
+            <li><a href="#">Create Invoice</a></li>
+            <li class="active">BMSD Invoice Notification List</li>
         </ol>
     </section>
     <br>
@@ -17,7 +17,7 @@
             <div class="col-md-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="text-center "><b> BMSD Invoice List</b></h3>
+                        <h3 class="text-center "><b> BMSD Invoice Notification List</b></h3>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -48,14 +48,8 @@
                                         <th>S.No</th>
                                         <th>Date</th>
                                         <th>Invoice</th>
-                                        <th>Bill No</th>
-                                        <th>Name | Designation</th>
-                                        <th>District </th>
-                                        <th>Area </th>
-                                        <th>Hopital / Department </th>
-                                        <th>Sub Total</th>
-                                        <th>Discount</th>
-                                        <th>Grand Total</th>
+                                        <th>Sender</th>
+                                        <th>Status</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
@@ -66,19 +60,18 @@
                                 {% for invoice in object_list %}
                                     <tr>
                                         <td>{{forloop.counter}}</td>
-                                        <td>{{ invoice.date|date:"d M Y" }}</td>
-                                        <td>{{ invoice.id|stringformat:"07d" }}</td>
-                                        <td>{% if invoice.bill_no %}{{ invoice.bill_no }} {% else %}{{ invoice.id|stringformat:"07d" }}{% endif %}</td>
+                                        <td>{{ invoice.dated|date:"d M Y" }}</td>
+                                        <td>{{ invoice.invoice_dho.id|stringformat:"07d" }}</td>
                                         <td>{{ invoice.dho.username|title }} | 
                                         {{ invoice.dho.user_profile.user_type|title }}</td>
-                                        <td>{{invoice.district|title}}</td>
-                                        <td>{{invoice.area|title}}</td>
-                                        <td>{{invoice.hospital_name|title}}</td>
-                                        <td>{{ invoice.sub_total|floatformat:-2 }}</td>
-                                        <td>{{ invoice.discount|floatformat:-2 }}</td>
-                                        <td>{{ invoice.grand_total|floatformat:-2 }}</td>
+                                        {% if invoice.invoice_dho.status_for_accepted == True %}
+                                        <td style="color: green;">Accepted</td>
+                                        {% else %}
+                                        <td style="color: red;">Waiting For Approval</td>
+                                        {% endif %}
                                         <td class="text-center">
-                                            <a href="{% url 'invoice:invoice_detail' pk=invoice.id %}"><button title="Invoice Detail" class="btn btn-info btn-xs">View</button></a>
+                                            <input type="hidden" name="invoice_id" value="{{invoice.invoice_dho.id}}">
+                                            <a href="{% url 'invoice:invoice_detail' pk=invoice.invoice_dho.id %}"><button title="Invoice Detail" class="btn btn-info btn-xs">View</button></a>
                                         </td>
                                     </tr>
                                 {% endfor %}

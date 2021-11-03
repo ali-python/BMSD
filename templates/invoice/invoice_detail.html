@@ -29,6 +29,12 @@
                                     <h1 ><strong>LMIS</strong></h1>
                                     <img id="yourImgId" src="{% static "dist/img/icons/logo11.jpeg" %}" alt="logo" %}">
                                     <h1>LMIS | BMSD</h1>
+                                     <input type="hidden" name="invoice_id" value="{{invoice.id}}">
+                                     {% if invoice.status_for_accepted == False %}
+                                    <button type="button" id="confirm_btn" name="confirm_btn" class="btn btn-primary confirm_btn"  style="background-color: green; float: left; pad"  id="load" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>Processing">Accepted</button><br><br>
+                                    {% else %}
+                                        <span style="color:green; font-size: 20px;"><b>Your Invoice Accepted</b></span>
+                                    {% endif %}
                                     <hr>
                                     <u><h2>Invoice</h2></u>
                                 </div>
@@ -139,6 +145,10 @@
             </div>
         </section>
     </div>
+    {% endblock %}
+
+{% block script %}
+    {{ block.super }}
     <script>
         var yourImg = document.getElementById('yourImgId');
         if(yourImg && yourImg.style) {
@@ -172,6 +182,28 @@ $('#invoice').on('click', function() {
        $this.button('reset');
    }, 5000);
 });
+</script>
+ <script>
+        $('.confirm_btn').on ('click', function (){
+            console.log("_________________-cmf_______________")
+            console.log("_________________-cmf_______________")
+            console.log("_________________-cmf_______________")
+
+            $.post("{% url 'invoice:invoice_confirm_api' %}", {
+                invoice_id: '{{ invoice.id }}',
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },function(result, status){
+                if (result.status == 'True') {
+                    $('.confirmation-btn').html('Invoice Confirmed!');
+                }
+            });
+            Swal.fire(
+              'Thank You!',
+              'Your Invoice is Under process, our support team will contact you soon',
+              'success'
+            )
+            });
+
 </script>
 
 {% endblock %}

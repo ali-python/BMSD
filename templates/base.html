@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static 'bower_components/jvectormap/jquery-jvectormap.css' %}">
     <link rel="stylesheet" href="{% static 'dist/css/AdminLTE.min.css' %}">
     <link rel="stylesheet" href="{% static 'dist/css/skins/_all-skins.min.css' %}">
+    <link href="{% static 'dist/css/sweetalert.css' %}" rel="stylesheet" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="{% static 'js/Chart.js' %}"></script>
 
@@ -24,11 +25,11 @@
     <header class="main-header">
 
         <!-- Logo -->
-        <a href="#" class="logo">
+        <a href="{% url 'common:home' %}" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>BMSD</b></span>
+            <span class="logo-mini"><b>GIL | LMIS</b></span>
             <!-- logo for regular state and mobile devices -->
-            <span class="logo-lg"><b>GIL</b>A l i</span>
+            <span class="logo-lg"><b>BMSD | GIL</b></span>
 
         </a>
 
@@ -111,6 +112,18 @@
                         <li class="{% block sales_list %}{% endblock %}"><a href="{% url 'invoice:invoice_list' %}"><i class="fa fa-circle-o"></i>Invoice List</a></li>
                     </ul>
                 </li>
+                <li class="header">Invoice Notification</li>
+                <li class="treeview {% block sales_notification %}{% endblock %}">
+                    <a href="#">
+                        <i class="fa fa-shopping-cart "></i> <span>Invoice Notification</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="{% block sales_notification_list %}{% endblock %}"><a href="{% url 'invoice:invoice_list_notification' %}"><i class="fa fa-circle-o"></i> <span>View Notification</span></a></li>
+                    </ul>
+                </li>
                 <li class="header">Reports</li>
                 <li class="treeview {% block reports %}{% endblock %}">
                     <a href="#">
@@ -139,7 +152,7 @@
         <div class="pull-right hidden-xs">
             <b>Version</b> 2.4.18
         </div>
-        <strong>Copyright &copy; 2014-2019 <a href="#">Partum Solutions</a>.</strong> All rights
+        <strong>Copyright &copy; 2019-2021 <a href="#">GIL | BMSD | LMIS </a>.</strong> All rights
         reserved.
     </footer>
 </div>
@@ -159,6 +172,8 @@
     <script src="{% static 'bower_components/jquery-slimscroll/jquery.slimscroll.min.js' %}"></script>
     <script src="{% static 'bower_components/chart.js/Chart.js' %}"></script>
     <script src="{% static 'dist/js/demo.js' %}"></script>
+     <script src="{% static 'js/sweetalert.js' %}"></script>
+
 
     <script>
         var notification_count = 0;

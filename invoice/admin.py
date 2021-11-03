@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from django.contrib import admin
-from .models import Invoice
+from .models import Invoice, InvoiceNotification
 
 
 class InvoiceAdmin(admin.ModelAdmin):
@@ -16,4 +16,14 @@ class InvoiceAdmin(admin.ModelAdmin):
     def dho(obj):
         return obj.user.username if obj.customer else ''
 
+class InvoiceNotificationAdmin(admin.ModelAdmin):
+    list_display = (
+        '__str__','dho', 'invoice_dho', 'dated'
+    )
+
+    @staticmethod
+    def dho(obj):
+        return obj.dho.username if obj.dho else ''
+
+admin.site.register(InvoiceNotification, InvoiceNotificationAdmin)
 admin.site.register(Invoice, InvoiceAdmin)

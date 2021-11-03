@@ -52,9 +52,20 @@ class Invoice(models.Model):
         max_digits=65, decimal_places=2, default=0, blank=True, null=True
     )
     date = models.DateField(default=timezone.now, blank=True, null=True)
-    status_for_accepted = models.BooleanField(default=True)
+    status_for_accepted = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.id).zfill(7)
 
-# Create your models here.
+class InvoiceNotification(models.Model):
+    dho = models.ForeignKey(
+        User,
+        related_name='dho_invoice',
+        blank=True, null=True, on_delete=models.SET_NULL
+    )
+    invoice_dho = models.ForeignKey(Invoice, related_name='invoices_notification', blank=True, null=True,
+        on_delete=models.SET_NULL)
+    dated = models.DateField(default=timezone.now, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.invoice_dho.id)

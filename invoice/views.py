@@ -9,11 +9,11 @@ from django.db import transaction
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from .models import Invoice
+from .models import Invoice, InvoiceNotification
 from common.models import UserProfile
 from products.models import StockIn, Product
 from accounts.forms import AccountLedgerForm
-from .forms import InvoiceForm
+from .forms import InvoiceForm, InvoiceNotificationForm
 from products.forms import StockOutForm
 from django.contrib.auth.models import User
 
@@ -236,7 +236,13 @@ class GenerateInvoiceAPIView(View):
 
                     user_ledger = AccountLedgerForm(ledger_form_kwargs)
                     user_ledger.save()
-
+            invoice_notificatfion_form_kwargs = {
+                'dho':user_id,
+                'invoice_dho': invoice.id,
+            }
+            invoice_notification_form = InvoiceNotificationForm(invoice_notificatfion_form_kwargs)
+            invoice_notify = invoice_notification_form.save(commit=False)
+            invoice_notification_form.save()
 
         return JsonResponse({'invoice_id': invoice.id})
 
@@ -274,3 +280,33 @@ class DeleteInvoice(DeleteView):
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
+
+class InvoiceNotificationListView(ListView):
+    template_name = 'invoice/invoice_notification_list.html'
+    model = InvoiceNotification
+    paginate_by = 100
+    ordering = '-id'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            InvoiceNotificationListView, self).dispatch(request, *args, **kwargs)
+
+
+class ConfirmInvoiceAPIView(View):
+
+    def post(self, request, *args, **kwargs):
+        print("______________-comg____________________")
+        print("______________-comg____________________")
+        print("______________-comg____________________")
+        print("______________-comg____________________")
+        print("______________-comg____________________")
+        invoice = Invoice.objects.get(id=self.request.POST.get('invoice_id'))
+        invoice.status_for_accepted = 'True'
+        invoice.save()
+
+        return JsonResponse({
+            'status': True,
+        })

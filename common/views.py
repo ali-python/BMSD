@@ -15,6 +15,8 @@ from django.http import HttpResponseRedirect,HttpResponse
 from .models import UserProfile
 from django.db import transaction
 from django.contrib.auth import authenticate
+from invoice.models import Invoice
+
 
 
 
@@ -53,6 +55,34 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
+
+        sales = Invoice.objects.all()
+        sales_sum = sales.aggregate(
+            total_sales=Sum('grand_total')
+        )
+
+        today_sales = (
+            Invoice.objects.filter(
+                date__icontains=timezone.now().date()
+            )
+        )
+        today_sales_sum = today_sales.aggregate(
+            total_sales=Sum('grand_total')
+        )
+
+        context.update({
+            'sales_count': sales.count(),
+            'sales_sum': (
+                int(sales_sum.get('total_sales')) if
+                sales_sum.get('total_sales') else 0
+            ),
+            'today_sales_count': today_sales.count(),
+            'today_sales_sum': (
+                int(today_sales_sum.get('total_sales')) if
+                today_sales_sum.get('total_sales') else 0
+            )
+        })
+
         return context
 
 class UserListView(ListView):
