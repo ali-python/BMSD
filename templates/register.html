@@ -8,7 +8,7 @@
     <section class="content-header">
         <ol class="breadcrumb">
             <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Japan Add Bank</li>
+            <li class="active">Add New User</li>
         </ol>
     </section>
     <br>
@@ -34,10 +34,10 @@
                         {{ form.non_field_errors }}
                     </div>
                 {% endif %}
-                <h5>Register a New User</h5>
+                <h5>Register a New User {{district}}</h5>
                 <label class="btn btn-primary" for="image_1">
                 <input type="file" id="image_1" name="image_1" class=" col-lg-3 pull-left" style="display:none" title="Image 1"  onchange="$('#upload-file-info').html(this.files[0].name)">
-                Upload Profile Pic
+                Upload Profile Pic 
                 <span class='label label-info' id="upload-file-info"></span>
             </label><br><br>
 
@@ -48,10 +48,15 @@
                 <br>
                 <input type="text" class="form-control user_type" name="user_type" placeholder="User Designation" list="unit-list">
                 <datalist id="unit-list">
-                    <option value="Director"></option>
-                    <option value="DHO"></option>
-                    <option value="Store Keeper"></option>
+                    <option value="DHO"> DHO</option>
+                    <option value="store_keeper"> Store Keeper</option>
+                    <option value="data_entry_operator">Data Entry operator</option>
                 </datalist> <br>
+                <select class="form-control district" name="district" placeholder="District">
+                                {% for district in district %}
+                                <option value="{{district.name}}">{{district.name}}</option>
+                                {% endfor %}
+                            </select> <br>
                 <input type="text" class="form-control" placeholder="Address" name="address" autofocus><br>
                 <input type="text" class="form-control" placeholder="Office Address" name="office_address" autofocus><br>
                 <input type="text" class="form-control" placeholder="City" name="city" autofocus><br>

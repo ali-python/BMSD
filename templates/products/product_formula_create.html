@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block car_brand %}active{% endblock %}
+{% block add_car_brand %}active{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <ol class="breadcrumb">
+            <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Add Product Formula</li>
+        </ol>
+    </section>
+    <br>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-6 pull-left">
+                <div class="box">
+                    <div class="box-header">
+                        <h4 class="text-center"><b>Add Product & Formula</b></h4>
+                    </div>
+                    <div class="box-body">
+                        <form action="{% url 'product:requested_formula' %}" method="post" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="row">
+                                 <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Formula Name <span style="color:red">*</span></label>
+                                    <select class="form-control form-control-alternative" name='formula_name'>
+                                        {% for formula in formula %}
+                                        <option value="{{formula.id}}">{{formula.product_formula_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                 <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Product Name <span style="color:red">*</span></label>
+                                    <select class="form-control form-control-alternative" name="product_name">
+                                        {% for product in products %}
+                                        <option value="{{product.id}}">{{product.product_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                 <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Company Name <span style="color:red">*</span></label>
+                                    <select class="form-control form-control-alternative" name="company_name">
+                                        {% for company in companies %}
+                                        <option value="{{company.id}}">{{company.name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                 <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Unit Type<span style="color:red">*</span></label>
+                                    <input type="text" class="form-control unit_type" name="unit_type" placeholder="Unit Type" list="unit-list">
+                                        <datalist id="unit-list">
+                                            <option value="Kilogram"></option>
+                                            <option value="Gram"></option>
+                                            <option value="Litre"></option>
+                                            <option value="Quantity"></option>
+                                        </datalist>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 pull-right form-group">
+                                    <label class="form-control-label"></label>
+                                    <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

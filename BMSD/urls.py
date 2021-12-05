@@ -24,6 +24,7 @@ urlpatterns = [
     path('ledger/', include(('accounts.urls', 'accounts'), namespace='user_ledger')),
     path('products/', include(('products.urls', 'products'), namespace='product')),
     path('invoice/', include(('invoice.urls', 'invoice'), namespace='invoice')),
+    path('budget/', include(('budget.urls', 'budget'), namespace='budget')),
     path('', IndexView.as_view(), name='home'),
 
 ]

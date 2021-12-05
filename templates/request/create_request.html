@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block sales %}active{% endblock %}
+{% block sales_add %}active{% endblock %}
+{% load static %}
+{% block content %}
+    <style>
+        .item-row th {
+            background: #eee;
+        }
+
+        .delete-btn {
+            position: relative;
+        }
+
+        .delete {
+            display: block;
+            color: #000;
+            text-decoration: none;
+            position: absolute;
+            background: #EEEEEE;
+            font-weight: bold;
+            padding: 0px 3px;
+            border: 1px solid;
+            top: -6px;
+            left: -6px;
+            font-family: Verdana;
+            font-size: 12px;
+        }
+
+        table {
+          table-layout: fixed ;
+          width: 100% ;
+        }
+        td {
+          width: 25% ;
+        }
+table {
+    table-layout: auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+table td {
+    border: 1px solid #ccc;
+}
+table .absorbing-column {
+    width: 100%;
+}
+    </style>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">BMSD Create Invoice</li>
+            </ol>
+        </section>
+        <br>
+        <section class="content">
+            <div class="row" style="font-size: large">
+                <div class="col-lg-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h2 class="text-center">BMSD Create Request For Formula</h2>
+
+                        </div>
+                        <div style="padding: 30px;float: left;" class="col-lg-3">
+                              <select id="ddlViewBy" class="form-control">
+                              <option value="1">test1</option>
+                              <option value="2">test2</option>
+                              <option value="3">test3</option>
+                            </select>
+                    </div>
+                        <div style="padding: 30px;" class="col-lg-3">
+                        <input type="button" class="form-control btn btn-primary" value="Add a field" class="add" id="add" />
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                        
+                    
+                <fieldset id="buildyourform">
+                    <legend>Build your own form!</legend>
+                </fieldset>               
+                </div>
+            </div>
+        </div>
+         </section>
+    </div>
+       
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+
+    <script src="{% static 'dist/js/jquery.invoice.js' %}"></script>
+    
+    <script>
+	$(document).ready(function() {
+		$(document).off('click', "#add").on('click', "#add", function() {
+			var selectedvalue = $("#ddlViewBy option:selected").val();
+			var selectedtext = $("#ddlViewBy option:selected").text();
+			var lastField = $("#buildyourform div:last");
+			var intId = (lastField && lastField.length && lastField.data("idx") + 1) || 1;
+			var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/>");
+			fieldWrapper.data("idx", intId);
+			var fName = $("<input  type=\"text\" class=\"fieldname  col-lg-4\" value='"+selectedtext+"' />");
+			var removeButton = $("<input type=\"button\" class=\"remove\" value=\"-\" />");
+			removeButton.click(function() {
+				$(this).parent().remove();
+			});
+			fieldWrapper.append(fName);
+			fieldWrapper.append(removeButton);
+			$("#buildyourform").append(fieldWrapper);
+		});
+	});
+
+      
+
+    </script>
+
+    <script>
+     
+    </script>
+
+
+{% endblock %}

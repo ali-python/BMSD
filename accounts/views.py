@@ -85,6 +85,7 @@ class UserLedgerListView(ListView):
         else:
             debit_amount = 0
             credit_amount = 0
+            total_remaining_amount = 0
         context.update({
             'user': user,
             'debit_amount': debit_amount,

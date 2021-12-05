@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% block car_brand %}active{% endblock %}
+{% block list_car_brand %}active{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <ol class="breadcrumb">
+            <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="{% url 'budget:create_new_budget' %}">Add New Budget</a></li>
+            <li class="active">Revised Budget List</li>
+        </ol>
+    </section>
+    <br>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <div class="box">
+                    <div class="row">
+                        <h4 class="text-center"><b>Revised Budget List</b></h4>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-4 pull-left">
+                                <input type="text" class="form-control car_brand_name" placeholder="Search by Name ..." >
+                            </div>
+                            <div class="col-md-2 pull-right">
+                                <button class="form-control btn btn-primary search">Search</button>
+                            </div>
+                            <br><br>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table align-items-center table-striped table-bordered table-hover">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Old Budget Amount</th>
+                                    <th>District</th>
+                                    <th>Budget Amount</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                {% for r_budget in object_list %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{r_budget.start_dated|date:"d M Y"}}</td>
+                                    <td>{{r_budget.end_dated|date:"d M Y"}}</td>
+                                    <td>{{r_budget.previous_budget_record.utilize_total_budget.budget_amount}}</td>
+                                    <td>{{r_budget.previous_budget_record.district.name}}</td>
+                                    <td>{{r_budget.previous_budget_record.district_budget_amount}}</td>
+                                    <td>{{r_budget.dated|date:"d M Y"}}</td>
+                                </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                            {% if paginator.page_range|length > 1 %}
+                            <div class="text-center col-lg-12">
+                                <ul class="pagination justify-content-center">
+                                <span class="step-links">
+                                    {% if page_obj.has_previous %}
+                                        <a href="?page=1">First</a>
+                                        <a href="?page={{ page_obj.previous_page_number }}" title="Previous"><<</a>
+                                    {% endif %}
+                                    {% if page_obj.has_next %}
+                                        <a href="?page={{ page_obj.next_page_number }}" title="Next">>></a>
+                                        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                                    {% endif %}
+                                </span>
+                                 </ul>
+                            <div>
+                            <span class="current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+                            </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block script %}
+    {{ block.super }}
+<script>
+$(function () {
+    $('.search').on('click', function () {
+        var url = '{% url "common:list_district" %}';
+        window.location.href  = url + '?' + 'car_brand_name=' + $('.car_brand_name').val();
+    });
+})
+</script>
+<style>
+  .pagination a {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+
+}
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {background-color: rgb(106, 142, 174);}
+</style>
+{% endblock %}

@@ -17,6 +17,8 @@ from .forms import InvoiceForm, InvoiceNotificationForm
 from products.forms import StockOutForm
 from django.contrib.auth.models import User
 
+from products.models import ProductFormula
+
 
 class InvoiceListView(ListView):
     template_name = 'invoice/invoice_list.html'
@@ -71,11 +73,78 @@ class CreateInvoiceTemplateView(TemplateView):
         context = super(CreateInvoiceTemplateView, self).get_context_data(**kwargs)
         context.update({
             'user': UserProfile.objects.all().order_by('id'),
+            'p_f': ProductFormula.objects.all().order_by('id'),
             'products': StockIn.objects.all().order_by('id'),
             'today_date': timezone.now().date(),
         })
         return context
 
+
+class ProductFormulaListAPIView(View):
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            ProductListAPIView, self).dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        products = ProductFormula.objects.all()
+        print(products)
+        print("______________________________________")
+        print("______________________________________")
+        print("______________________________________")
+        print("______________________________________")
+        items = []
+
+        for product in products:
+            p = {
+                'id': product.id,
+                'name': product.product_name,
+                'company':product.product_formula_name
+            }
+
+            if product.stockin_product.exists():
+                stock_detail = product.stockin_product.all().latest('id')
+                p.update({
+                    'retail_price': stock_detail.price_per_item,
+                    'consumer_price': stock_detail.price_per_item,
+                    'expiry': stock_detail.stock_expiry,
+                })
+
+                all_stock = product.stockin_product.all()
+                if all_stock:
+                    all_stock = all_stock.aggregate(Sum('quantity'))
+                    all_stock = float(all_stock.get('quantity__sum') or 0)
+                else:
+                    all_stock = 0
+
+                purchased_stock = product.stockout_product.all()
+                if purchased_stock:
+                    purchased_stock = purchased_stock.aggregate(
+                        Sum('stock_out_quantity'))
+                    purchased_stock = float(
+                        purchased_stock.get('stock_out_quantity__sum') or 0)
+                else:
+                    purchased_stock = 0
+
+                p.update({
+                    'stock': all_stock - purchased_stock
+                })
+
+            else:
+                p.update(
+                    {
+                        'retail_price':0,
+                        'consumer_price':0,
+                        'expiry':0
+                    }
+                )
+
+            items.append(p)
+
+        return JsonResponse({'products': items})
 
 class ProductListAPIView(View):
 

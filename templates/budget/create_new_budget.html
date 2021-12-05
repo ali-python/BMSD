@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block district %}active{% endblock %}
+{% block add_district %}active{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <ol class="breadcrumb">
+            <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Add New Budget</li>
+        </ol>
+    </section>
+    <br>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-6 pull-left">
+                <div class="box">
+                    <div class="box-header">
+                        <h4 class="text-center"><b>Add District</b></h4>
+                    </div>
+                    <div class="box-body">
+                        <form action="{% url 'budget:create_new_budget' %}" method="post" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Budget Amount <span style="color:red">*</span></label>
+                                    <input type="text" name="budget_amount" class="form-control form-control-alternative" placeholder=" eg: 10000, 2500000, etc" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Start Date <span style="color:red">*</span></label>
+                                    <input type="date" name="start_dated" class="form-control form-control-alternative" placeholder="Start Date" onfocus="(this.type='date')" onblur="(this.type='text')" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">End Date <span style="color:red">*</span></label>
+                                    <input type="date" name="end_dated" class="form-control form-control-alternative" placeholder="End Date" onfocus="(this.type='date')" onblur="(this.type='text')" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Discription <span style="color:red">*</span></label>
+                                    <textarea name="discription" class="form-control form-control-alternative" placeholder="Discription"> </textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                            <label class="btn btn-primary" for="image_1">
+                                <input type="file" id="image_1" name="document" class=" col-lg-3 pull-left" style="display:none" title="Upload Document"  onchange="$('#upload-file-info').html(this.files[0].name)">
+                                Upload Document 
+                                <span class='label label-info' id="upload-file-info"></span>
+                            </label>
+                        </div>
+                        </div>
+                            <div class="row">
+                                <div class="col-md-4 pull-right form-group">
+                                    <label class="form-control-label"></label>
+                                    <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

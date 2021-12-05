@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block district %}active{% endblock %}
+{% block add_district %}active{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="content-wrapper">
+    <section class="content-header">
+        <ol class="breadcrumb">
+            <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">Revised Budget</li>
+        </ol>
+    </section>
+    <br>
+    <section class="content">
+        <div class="row">
+            <div class="col-md-6 pull-left">
+                <div class="box">
+                    <div class="box-header">
+                        <h4 class="text-center"><b>Revised District</b></h4>
+                    </div>
+                    <div class="box-body">
+                        <form action="{% url 'budget:revised_budget' pk=old_budget.id %}" method="post" autocomplete="off">
+                            {% csrf_token %}
+
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Old Budget Amount <span style="color:red">*</span></label>
+                                   <input type="text" class="form-control form-control-alternative" id="previous_budget_record" name="previous_budget_record" value="{{old_budget.utilize_total_budget.budget_amount}}" readonly>
+                                   <input type="hidden" class="form-control form-control-alternative" id="previous_budget_record" name="previous_budget_record" value="{{old_budget.id}}" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">District <span style="color:red">*</span></label>
+                                   <input type="text" class="form-control form-control-alternative" id="district" name="district" value="{{old_budget.district.name}}" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Revised Budget Amount <span style="color:red">*</span></label>
+                                    <input type="text" name="revise_budget_amount" class="form-control form-control-alternative" placeholder=" eg: 10000, 2500000, etc" required>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">Start Date <span style="color:red">*</span></label>
+                                    <input type="date" value="{{old_budget.start_dated|date:'Y-m-d'}}" name="start_dated" class="form-control  form-control-alternative" onfocus="(this.type='date')" onblur="(this.type='text')" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 pull-left form-group">
+                                    <label class="form-control-label">End Date <span style="color:red">*</span></label>
+                                    <input type="date" value="{{old_budget.end_dated|date:'Y-m-d'}}" name="end_dated" class="form-control form-control-alternative" placeholder="End Date" onfocus="(this.type='date')" onblur="(this.type='text')" readonly>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 pull-right form-group">
+                                    <label class="form-control-label"></label>
+                                    <button type="submit" value="Create" class="btn btn-primary form-control">Save</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

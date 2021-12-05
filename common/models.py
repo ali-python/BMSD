@@ -10,20 +10,30 @@ class DatedModel(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+class District(models.Model):
+    name = models.CharField(max_length=200, blank=True, null=True)
+    dated =models.DateField(default=timezone.now, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.name
+
 class UserProfile(models.Model):
-    USER_TYPE_DIRECTOR = 'director'
-    USER_TYPE_DHO = 'dho'
+    USER_TYPE_DIRECTOR = 'Director'
+    USER_TYPE_DHO = 'DHO'
     USER_TYPE_STORE_KEEPER = 'store_keeper'
     USER_TYPE_DATA_ENTRY_OPERATOR = 'data_entry_operator'
 
     USER_TYPES = (
         (USER_TYPE_DIRECTOR, 'Director'),
         (USER_TYPE_DHO, 'DHO'),
-        (USER_TYPE_STORE_KEEPER, 'Store keeper'),
-        (USER_TYPE_DATA_ENTRY_OPERATOR, 'Data Entry Operator')
+        (USER_TYPE_STORE_KEEPER, 'store_keeper'),
+        (USER_TYPE_DATA_ENTRY_OPERATOR, 'data_entry_operator')
     )
 
     user = models.OneToOneField(User, related_name='user_profile', on_delete=models.CASCADE)
+    district = models.ForeignKey(
+        District, related_name='user_district',on_delete=models.CASCADE, null=True, blank=True
+    )
     user_type = models.CharField(
         max_length=100, choices=USER_TYPES, default=USER_TYPE_DIRECTOR
     )

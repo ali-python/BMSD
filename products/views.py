@@ -7,9 +7,9 @@ from django.urls import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 from django.db.models import Sum
-from .models import Company, Product, StockIn,StockOut, ProductDetail, PurchasedProduct
+from .models import Company, Product, StockIn,StockOut, ProductDetail, PurchasedProduct, ProductFormula, ProductAvailable
 from .forms import (
-    CompanyForm, ProductForm,StockInForm,StockOutForm)
+    CompanyForm, ProductForm,StockInForm,StockOutForm, ProductFormulaForm, ProductFormulaAvailableForm)
 from django.utils import timezone
 
 class AddCompany(FormView):
@@ -29,6 +29,33 @@ class AddCompany(FormView):
 
     def form_invalid(self, form):
         return super(AddCompany, self).form_invalid(form)
+
+class AddProductFormula(FormView):
+    form_class = ProductFormulaForm
+    template_name = 'products/add_product_formula.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('common:login'))
+
+        return super(
+            AddProductFormula, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        fromula = form.save()
+        fromula.status_available = True
+        fromula.save()
+        return HttpResponseRedirect(reverse('product:product_formula_list'))
+
+    def form_invalid(self, form):
+        return super(AddProductFormula, self).form_invalid(form)
+
+
+class ProductFormulaList(ListView):
+    template_name = 'products/product_formula_list.html'
+    paginate_by = 100
+    model = ProductFormula
+    ordering = '-id'
 
 class CompanyList(TemplateView):
     template_name = 'products/company_list.html'
@@ -75,6 +102,8 @@ class AddNewProduct_list(FormView):
 
     def form_valid(self, form):
         product = form.save()
+        product.status_available = True
+        product.save()
 
         return HttpResponseRedirect(reverse('product:products_items_list'))
 
@@ -94,6 +123,65 @@ class AddNewProduct_list(FormView):
             'companies': companies
         })
         return context
+
+class AddRequestedProduct(FormView):
+    form_class = ProductFormulaAvailableForm
+    template_name = 'products/product_formula_create.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+        return super(
+            AddRequestedProduct, self).dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        product = form.save()
+        product.status_available = True
+        product.save()
+
+        return HttpResponseRedirect(reverse('product:products_items_list'))
+
+    def form_invalid(self, form):
+        print(form.errors)
+        print("_______________________________________")
+        print("_______________________________________")
+        print("_______________________________________")
+        return super(AddRequestedProduct, self).form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(AddRequestedProduct, self).get_context_data(**kwargs)
+        products = Product.objects.all()
+        print(products)
+        companies = Company.objects.all()
+        formula = ProductFormula.objects.all()
+        context.update({
+            'products': products,
+            'companies': companies,
+            'formula': formula
+
+        })
+        return context
+
+class AvailableProductFormulaView(ListView):
+    template_name = 'products/product_formula_available.html'
+    paginate_by = 100
+    model = ProductAvailable
+    ordering = '-id'
+
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     if not queryset:
+    #         queryset = StockIn.objects.all()
+
+    #     queryset = queryset.filter(product=self.kwargs.get('id'))
+    #     return queryset.order_by('-id')
+
+    # def get_context_data(self, **kwargs):
+    #     context = super(StockInListView, self).get_context_data(**kwargs)
+    #     context.update({
+    #         'product': Product.objects.get(id=self.kwargs.get('id'))
+    #     })
+    #     return context
 
 
 class StockInListView(ListView):
@@ -160,5 +248,24 @@ class ProductUpdateView(UpdateView):
         companies = Company.objects.all()
         context.update({
             'companies': companies
+        })
+        return context
+
+
+class RequestForFormula(TemplateView):
+    template_name = 'request/create_request.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('login'))
+
+        return super(
+            RequestForFormula, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(RequestForFormula, self).get_context_data(**kwargs)
+        formula = ProductFormula.objects.all()
+        context.update({
+            'formula': formula
         })
         return context

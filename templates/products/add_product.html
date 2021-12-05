@@ -23,33 +23,11 @@
                         <form action="{% url 'product:add_product' %}" method="post" autocomplete="off">
                             {% csrf_token %}
                             <div class="row" style="margin-left: auto; margin-right: auto;">
-                                <div class="col-md-6 form-group">
-                                <label class="form-control-label" name="category">Companies<span style="color:red">*</span></label>
-                                    <select class="form-control form-control-alternative" name="company_name">
-                                    {% for company in companies %}
-                                        <option value="{{company.id}}">{{company.name|title}}</option>
-                                    {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-left: auto; margin-right: auto;">
                                 <div class="col-md-6  form-group">
                                     <br><br>
                                     <label class="form-control-label"><b>Product Name</b> <span style="color:red">*</span></label>
                                     <input type="text" name="product_name" class="form-control form-control-alternative" placeholde
                                     r=">Product Name" required>
-                                </div>
-                            </div>
-                            <div class="row" style="margin-left: auto; margin-right: auto;">
-                                <div class="col-md-6  form-group">
-                                <label><strong>Unit Type</strong></label>
-                                    <input type="text" class="form-control unit_type" name="unit_type" placeholder="Unit Type" list="unit-list">
-                                    <datalist id="unit-list">
-                                        <option value="Kilogram"></option>
-                                        <option value="Gram"></option>
-                                        <option value="Litre"></option>
-                                        <option value="Quantity"></option>
-                                    </datalist>
                                 </div>
                             </div>
                             <div class="row" style="margin-left: auto; margin-right: auto;">

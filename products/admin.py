@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 from django.contrib import admin
 
-from .models import Product, Company
+from .models import Product, Company, ProductFormula, ProductFormulaRequest, ProductAvailable
 from .models import ProductDetail
 from .models import PurchasedProduct
 from .models import StockIn,StockOut
@@ -9,9 +9,23 @@ from .models import StockIn,StockOut
 class CompanyAdmin(admin.ModelAdmin):
 	list_display = ('name', 'dated')
 
+class ProductFormulaRequestAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'product_formula','product_name', 'dated')
+
+class ProductFormulaAdmin(admin.ModelAdmin):
+    list_display = ('product_formula_name',  'status_available')
+
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
-        '__str__', 'product_name','UNIT_TYPE_QUANTITY',
+        '__str__', 'product_name',
+    )
+    search_fields = (
+        'name', 'product_name',
+    )
+
+class ProductAvailableAdmin(admin.ModelAdmin):
+    list_display = (
+        '__str__', 'product_name', 'formula_name', 'company_name', 'UNIT_TYPE_QUANTITY',
         'quantity', 'retail_price', 'consumer_price'
     )
     search_fields = (
@@ -87,6 +101,9 @@ class StockOutAdmin(admin.ModelAdmin):
         return obj.invoice.bill_no if obj.invoice else ''
 
 admin.site.register(Company, CompanyAdmin)
+admin.site.register(ProductAvailable, ProductAvailableAdmin)
+admin.site.register(ProductFormula, ProductFormulaAdmin)
+admin.site.register(ProductFormulaRequest, ProductFormulaRequestAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductDetail, ProductDetailAdmin)
 admin.site.register(PurchasedProduct, PurchasedProductAdmin)

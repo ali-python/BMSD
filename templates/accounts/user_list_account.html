@@ -55,10 +55,10 @@
                     {% for user in object_list %}
                         <tr>
                             <td>picture</td>
-                            <td><a href="#">{{ user.user.username}}</a></td>
-                            <td>{{ user.user_type}}</td>
+                            <td><a href="#">{{ user.user.username|title}}</a></td>
+                            <td>{{ user.user_type|title}}</td>
                             <td>{{ user.phone_no}}</td>
-                            <td>{{ user.city}}</td>
+                            <td>{{ user.district.name|title}}</td>
                             <td>{{ user.office_address}}</td>
                             <td><span style="color:red">{{ user.status}}</span></td>
                             <td class="#">{{ user.dated }}</td>

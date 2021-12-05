@@ -13,6 +13,31 @@ class Company(models.Model):
 	dated = models.DateField(default=timezone.now, null=True, blank=True)
 
 class Product(models.Model):
+    product_name = models.CharField(max_length=100, unique=True)
+    status_available = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.product_name
+
+class ProductFormula(models.Model):
+    product_formula_name = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    status_available = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.product_formula_name
+
+class ProductFormulaRequest(models.Model):
+     product_formula = models.ForeignKey(
+        ProductFormula, related_name='requested_product_formula',on_delete=models.CASCADE
+    )
+     product_name = models.ForeignKey(Product, related_name='requested_product_name', on_delete=models.CASCADE)
+     status_available = models.BooleanField(default=True)
+     dated = models.DateField(default=timezone.now, null=True, blank=True)
+
+     def __str__(self):
+        return self.status_available
+
+class ProductAvailable(models.Model):
     UNIT_TYPE_KG = 'Kilogram'
     UNIT_TYPE_GRAM = 'Gram'
     UNIT_TYPE_LITRE = 'Litre'
@@ -30,7 +55,10 @@ class Product(models.Model):
         choices=UNIT_TYPES, default=UNIT_TYPE_QUANTITY,
         blank=True, null=True, max_length=200
     )
-    product_name = models.CharField(max_length=100, unique=True)
+    product_name = models.ForeignKey(Product, on_delete=models.CASCADE,
+                                 null=True, blank=True, related_name='product_name_available')
+    formula_name = models.ForeignKey(ProductFormula, on_delete=models.CASCADE,
+                                 null=True, blank=True, related_name='product_formula_available')
     status_available = models.BooleanField(default=True)
 
     def __str__(self):

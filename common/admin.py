@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import UserProfile
+from .models import UserProfile, District
 
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = (
-        '__unicode__', 'first_name', 'last_name', 'phone_no',
+        '__unicode__', 'district', 'first_name', 'last_name', 'phone_no',
         'email', 'user_type', 'office_address', 'city', 'dated'
     )
     search_fields = (
@@ -24,5 +24,14 @@ class UserProfileAdmin(admin.ModelAdmin):
     def email(obj):
         return obj.user.email
 
+class DistrictAdmin(admin.ModelAdmin):
+    list_display = (
+        '__unicode__', 'dated'
+    )
+    search_fields = (
+        'name',
+    )
+
 admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(District, DistrictAdmin)
 

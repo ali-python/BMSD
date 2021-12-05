@@ -8,7 +8,7 @@
     <section class="content-header">
         <ol class="breadcrumb">
             <li><a href="{% url 'common:home' %}"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active" style="color: green">Credit</li>
+            <li class="active" style="color: green">Debit</li>
         </ol>
     </section>
     <br>
@@ -17,7 +17,7 @@
             <div class="col-md-6 pull-left">
                 <div class="box">
                     <div class="box-header">
-                        <h4 class="text-center"><b>Credit</b></h4>
+                        <h4 class="text-center"><b>Debit</b></h4>
                     </div>
                     <div class="box-body">
                         <form action="#" method="post" autocomplete="off">
@@ -25,7 +25,7 @@
                             <input type="hidden" name="user" value="{{ user.user.id }}">
                             <div class="row">
                                 <div class="col-md-12 pull-left form-group">
-                                    <label class="form-control-label">Credit Amount <span style="color:red">*</span></label>
+                                    <label class="form-control-label">Debit Amount <span style="color:red">*</span></label>
                                     <input type="text" name="credit_amount" class="form-control form-control-alternative" placeholder="Credit Amount" required>
                                 </div>
                                 <div class="col-md-12 pull-left form-group">
